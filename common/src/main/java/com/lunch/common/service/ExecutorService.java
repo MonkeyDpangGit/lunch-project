@@ -55,7 +55,7 @@ public class ExecutorService {
      * @param input 输入对象
      * @return
      */
-    public Map execute(String action, String requestId, Map<String, Object> input) {
+    public Map execute(String action, String requestId, Map input) {
 
         long beginTime = System.currentTimeMillis();
         Map result = Maps.newHashMap();
