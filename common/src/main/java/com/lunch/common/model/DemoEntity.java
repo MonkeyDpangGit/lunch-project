@@ -16,9 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class DemoEntity extends BaseModel {
 
-    @Id
-    private String id;
-
     @Indexed(unique = true)
     private String name;
 
@@ -28,14 +25,6 @@ public class DemoEntity extends BaseModel {
 
     @Indexed(expireAfterSeconds = 60)
     private Date expiredDate;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

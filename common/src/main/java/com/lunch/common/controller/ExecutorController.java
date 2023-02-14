@@ -1,10 +1,12 @@
 package com.lunch.common.controller;
 
 import com.lunch.common.constants.ExecutorConstants;
+import com.lunch.common.dto.executor.ExecutorDefaultDTO;
 import com.lunch.common.service.ExecutorService;
 import java.util.Map;
-import org.apache.commons.collections.MapUtils;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,12 +25,21 @@ public class ExecutorController {
     private ExecutorService executorService;
 
     @PostMapping("/execute")
-    public Map<String, Object> execute(@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> execute(@RequestBody ExecutorDefaultDTO executorDefaultDTO) {
 
-        String action = MapUtils.getString(requestBody, ExecutorConstants.ACTION);
-        String requestId = MapUtils.getString(requestBody, ExecutorConstants.REQUEST_ID);
-        Map input = MapUtils.getMap(requestBody, ExecutorConstants.INPUT);
+        String action = executorDefaultDTO.getAction();
+        String requestId = executorDefaultDTO.getRequestId();
+        Map<String, Object> input = executorDefaultDTO.getInput();
 
         return executorService.execute(action, requestId, input);
+    }
+
+    @PostMapping("/execute/{action}")
+    public Map<String, Object> execute(@PathVariable(value = "action") String action,
+            @RequestBody(required = false) Map<String, Object> requestBody, HttpServletRequest request) {
+
+        String requestId = request.getHeader(ExecutorConstants.REQUEST_ID);
+
+        return executorService.execute(action, requestId, requestBody);
     }
 }

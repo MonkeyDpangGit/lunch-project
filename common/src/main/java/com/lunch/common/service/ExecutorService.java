@@ -55,7 +55,7 @@ public class ExecutorService {
      * @param input 输入对象
      * @return
      */
-    public Map execute(String action, String requestId, Map input) {
+    public Map execute(String action, String requestId, Map<String, Object> input) {
 
         long beginTime = System.currentTimeMillis();
         Map result = Maps.newHashMap();
@@ -65,9 +65,7 @@ public class ExecutorService {
             if (StringUtils.isBlank(action)) {
                 throw new Exception("'action' parameter required!");
             }
-            if (MapUtils.isEmpty(input)) {
-                throw new Exception("'input' parameter required!");
-            }
+            input = input == null ? Maps.newHashMap() : input;
             requestId = StringUtils.isBlank(requestId) ? UUID.randomUUID().toString() : requestId;
 
             // 获取指定的executor
