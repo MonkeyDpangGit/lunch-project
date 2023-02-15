@@ -1,4 +1,4 @@
-package com.lunch.common.executor.impl.demo;
+package com.lunch.common.executor.demo;
 
 import com.lunch.common.dto.demo.CreateDemoDTO;
 import com.lunch.common.executor.IExecutor;

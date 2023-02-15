@@ -15,7 +15,6 @@ public class ExecutorDefaultDTO {
     @NotBlank
     private String action;
 
-    @NotBlank
     private String requestId;
 
     private String language;

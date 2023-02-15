@@ -13,7 +13,8 @@
     <artifactId>operation</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>operation-service</module>
+        <module>operation-console-service</module>
+        <module>operation-data-model</module>
     </modules>
 
 </project>

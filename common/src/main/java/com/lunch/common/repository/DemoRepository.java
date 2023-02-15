@@ -1,4 +1,4 @@
-package com.lunch.common.dao;
+package com.lunch.common.repository;
 
 import com.lunch.common.model.DemoEntity;
 import java.util.List;

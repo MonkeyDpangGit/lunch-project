@@ -1,6 +1,6 @@
 package com.lunch.common.service;
 
-import com.lunch.common.dao.DemoRepository;
+import com.lunch.common.repository.DemoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

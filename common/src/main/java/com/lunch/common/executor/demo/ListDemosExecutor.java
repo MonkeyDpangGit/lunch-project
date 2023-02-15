@@ -1,4 +1,4 @@
-package com.lunch.common.executor.impl.demo;
+package com.lunch.common.executor.demo;
 
 import com.lunch.common.dto.PageDTO;
 import com.lunch.common.executor.IExecutor;
@@ -46,6 +46,6 @@ public class ListDemosExecutor implements IExecutor<PageDTO, PageVO<DemoEntity>>
             demoEntitieList = demoService.getDemoRepository().findAll(pageable);
         }
 
-        return PageVO.ok(demoEntitieList.toList(), demoEntitieList.getTotalElements(), "EntitieList");
+        return PageVO.ok(demoEntitieList.toList(), demoEntitieList.getTotalElements(), "entitieList");
     }
 }
