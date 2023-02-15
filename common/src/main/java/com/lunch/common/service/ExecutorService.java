@@ -6,7 +6,8 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
 import com.lunch.common.constants.ExecutorConstants;
 import com.lunch.common.dto.PageDTO;
-import com.lunch.common.enums.ErrorCodeEnum;
+import com.lunch.common.enums.ApplicationErrorEnum;
+import com.lunch.common.enums.IErrorEnum;
 import com.lunch.common.exception.ApplicationException;
 import com.lunch.common.executor.IExecutor;
 import java.lang.reflect.Method;
@@ -140,24 +141,21 @@ public class ExecutorService {
 
         Map errorMap = Maps.newHashMap();
 
-        if (e instanceof ApplicationException) {
+        if (e instanceof IErrorEnum) {
             ApplicationException exception = (ApplicationException) e;
-            errorMap.put(ExecutorConstants.CODE, exception.errorEnum.errorCode);
-            String errorMessage = exception.errorEnum.errorMessage;
-            Object[] fillParameter = exception.getFillParameter();
-            if (fillParameter != null) {
-                errorMessage = String.format(errorMessage, fillParameter);
-            }
+            errorMap.put(ExecutorConstants.CODE, exception.getErrorEnum().getErrorCode());
+            String errorMessage = exception.getMessage();
             errorMap.put(ExecutorConstants.MESSAGE, errorMessage);
         } else if (e instanceof IllegalArgumentException) {
-            IllegalArgumentException exception = (IllegalArgumentException) e;
-            errorMap.put(ExecutorConstants.CODE, ErrorCodeEnum.ILLEGAL_PARAMETER.errorCode);
-            errorMap.put(ExecutorConstants.MESSAGE,
-                    String.format(ErrorCodeEnum.ILLEGAL_PARAMETER.errorMessage, exception.getMessage()));
+            errorMap.put(ExecutorConstants.CODE, ApplicationErrorEnum.ILLEGAL_PARAMETER.getErrorCode());
+            String errorMessage = new ApplicationException(ApplicationErrorEnum.ILLEGAL_PARAMETER, e.getMessage())
+                    .getMessage();
+            errorMap.put(ExecutorConstants.MESSAGE, errorMessage);
         } else {
-            errorMap.put(ExecutorConstants.CODE, ErrorCodeEnum.FAILED_OPERATION.errorCode);
-            errorMap.put(ExecutorConstants.MESSAGE,
-                    StringUtils.defaultIfBlank(e.getMessage(), ErrorCodeEnum.FAILED_OPERATION.errorMessage));
+            errorMap.put(ExecutorConstants.CODE, ApplicationErrorEnum.FAILED_OPERATION.getErrorCode());
+            String errorMessage = new ApplicationException(ApplicationErrorEnum.UNKNOWN_EXCEPTION, e.getMessage())
+                    .getMessage();
+            errorMap.put(ExecutorConstants.MESSAGE, errorMessage);
         }
 
         Map outputMap = Maps.newHashMap();

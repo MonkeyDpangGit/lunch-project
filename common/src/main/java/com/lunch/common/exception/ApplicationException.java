@@ -1,6 +1,7 @@
 package com.lunch.common.exception;
 
-import com.lunch.common.enums.ErrorCodeEnum;
+import com.lunch.common.enums.ApplicationErrorEnum;
+import com.lunch.common.enums.IErrorEnum;
 
 /**
  * ApplicationException
@@ -11,38 +12,44 @@ import com.lunch.common.enums.ErrorCodeEnum;
  */
 public class ApplicationException extends RuntimeException {
 
-    public ErrorCodeEnum errorEnum;
+    public IErrorEnum errorEnum;
 
     public Object[] fillParameter;
 
-    public ApplicationException(ErrorCodeEnum errorEnum) {
+    public ApplicationException(IErrorEnum errorEnum) {
         super(errorEnum.getErrorMessage());
         this.errorEnum = errorEnum;
     }
 
-    public ApplicationException(ErrorCodeEnum errorEnum, Throwable t) {
+    public ApplicationException(IErrorEnum errorEnum, Throwable t) {
         super(errorEnum.getErrorMessage(), t);
         this.errorEnum = errorEnum;
+    }
+
+    public ApplicationException(IErrorEnum errorEnum, Object... fillParameter) {
+        super(errorEnum.getErrorMessage());
+        this.errorEnum = errorEnum;
+        this.fillParameter = fillParameter;
     }
 
     @Override
     public String getMessage() {
         if (errorEnum != null) {
             if (fillParameter != null && fillParameter.length > 0) {
-                return errorEnum.toString(fillParameter);
+                return String.format(errorEnum.getErrorMessage(), fillParameter);
             } else {
-                return errorEnum.toString();
+                return errorEnum.getErrorMessage();
             }
         } else {
             return super.getMessage();
         }
     }
 
-    public ErrorCodeEnum getErrorEnum() {
+    public IErrorEnum getErrorEnum() {
         return errorEnum;
     }
 
-    public void setErrorEnum(ErrorCodeEnum errorEnum) {
+    public void setErrorEnum(IErrorEnum errorEnum) {
         this.errorEnum = errorEnum;
     }
 
