@@ -34,18 +34,18 @@ public class ListDemosExecutor implements IExecutor<PageDTO, PageVO<DemoEntity>>
         Map searchCondition = pageDTO.getSearchCondition();
         Pageable pageable = pageDTO.toPageable("id");
 
-        Page<DemoEntity> demoEntitieList = null;
+        Page<DemoEntity> demoEntityList = null;
 
         String name = MapUtils.getString(searchCondition, "name");
         List org = (List) MapUtils.getObject(searchCondition, "org");
         if (StringUtils.isNotBlank(name)) {
-            demoEntitieList = demoService.getDemoRepository().findAllByName(name, pageable);
+            demoEntityList = demoService.getDemoRepository().findAllByName(name, pageable);
         } else if (CollectionUtils.isNotEmpty(org)) {
-            demoEntitieList = demoService.getDemoRepository().findAllByOrgIn(org, pageable);
+            demoEntityList = demoService.getDemoRepository().findAllByOrgIn(org, pageable);
         } else {
-            demoEntitieList = demoService.getDemoRepository().findAll(pageable);
+            demoEntityList = demoService.getDemoRepository().findAll(pageable);
         }
 
-        return PageVO.ok(demoEntitieList.toList(), demoEntitieList.getTotalElements(), "entitieList");
+        return PageVO.ok(demoEntityList.toList(), demoEntityList.getTotalElements(), "entityList");
     }
 }
