@@ -6,9 +6,9 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
 import com.lunch.common.constants.ExecutorConstants;
 import com.lunch.common.dto.PageDTO;
-import com.lunch.common.enums.ApplicationErrorEnum;
 import com.lunch.common.enums.IErrorEnum;
-import com.lunch.common.exception.ApplicationException;
+import com.lunch.common.enums.SysErrorEnum;
+import com.lunch.common.exception.SysException;
 import com.lunch.common.executor.IExecutor;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -108,6 +108,7 @@ public class ExecutorService {
             // 日志跟踪
             long consumeTime = System.currentTimeMillis() - beginTime;
             if (traceEnable || consumeTime > traceExpired) {
+
                 log.info("[input] [action]{}, [requestId]{}, [param]{}", action, requestId, input.toString());
                 log.info("[output] [action]{}, [requestId]{}, [param]{}", action, requestId, result.toString());
                 log.info("[summary] [action]{}, [requestId]{}, [consume]{}", action, requestId, consumeTime);
@@ -120,7 +121,7 @@ public class ExecutorService {
             log.error("[output] [action]{}, [requestId]{}, [param]{}", action, requestId, result.toString());
 
             long consumeTime = System.currentTimeMillis() - beginTime;
-            if (e instanceof ApplicationException || e instanceof IllegalArgumentException) {
+            if (e instanceof SysException || e instanceof IllegalArgumentException) {
                 // 业务错误，不打印堆栈
                 log.error("[summary] [action]{}, [requestId]{}, [consume]{}", action, requestId, consumeTime);
             } else {
@@ -141,20 +142,20 @@ public class ExecutorService {
 
         Map errorMap = Maps.newHashMap();
 
-        if (e instanceof IErrorEnum) {
-            ApplicationException exception = (ApplicationException) e;
+        if (e instanceof SysException) {
+            SysException exception = (SysException) e;
             errorMap.put(ExecutorConstants.CODE, exception.getErrorEnum().getErrorCode());
             String errorMessage = exception.getMessage();
             errorMap.put(ExecutorConstants.MESSAGE, errorMessage);
         } else if (e instanceof IllegalArgumentException) {
-            errorMap.put(ExecutorConstants.CODE, ApplicationErrorEnum.ILLEGAL_PARAMETER.getErrorCode());
-            String errorMessage = new ApplicationException(ApplicationErrorEnum.ILLEGAL_PARAMETER, e.getMessage())
-                    .getMessage();
+            IErrorEnum errorEnum = SysErrorEnum.ILLEGAL_PARAMETER;
+            errorMap.put(ExecutorConstants.CODE, errorEnum.getErrorCode());
+            String errorMessage = new SysException(errorEnum, e.getMessage()).getMessage().replace(", %s", "");
             errorMap.put(ExecutorConstants.MESSAGE, errorMessage);
         } else {
-            errorMap.put(ExecutorConstants.CODE, ApplicationErrorEnum.FAILED_OPERATION.getErrorCode());
-            String errorMessage = new ApplicationException(ApplicationErrorEnum.UNKNOWN_EXCEPTION, e.getMessage())
-                    .getMessage();
+            IErrorEnum errorEnum = SysErrorEnum.UNKNOWN_EXCEPTION;
+            errorMap.put(ExecutorConstants.CODE, errorEnum.getErrorCode());
+            String errorMessage = new SysException(errorEnum, e.getMessage()).getMessage().replace(", %s", "");
             errorMap.put(ExecutorConstants.MESSAGE, errorMessage);
         }
 

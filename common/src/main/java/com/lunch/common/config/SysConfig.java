@@ -7,14 +7,14 @@ import javax.validation.ValidatorFactory;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * ApplicationConfig
+ * SysConfig
  *
  * @author torrisli
  * @date 2022/2/13
- * @Description: ApplicationConfig
+ * @Description: SysConfig
  */
 @Configuration
-public class ApplicationConfig {
+public class SysConfig {
 
     @Bean("projectValidator")
     public Validator getValidator() {

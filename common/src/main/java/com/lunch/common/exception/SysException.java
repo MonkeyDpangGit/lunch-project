@@ -1,32 +1,31 @@
 package com.lunch.common.exception;
 
-import com.lunch.common.enums.ApplicationErrorEnum;
 import com.lunch.common.enums.IErrorEnum;
 
 /**
- * ApplicationException
+ * SysException
  *
  * @author torrisli
  * @date 2022/2/13
- * @Description: ApplicationException
+ * @Description: SysException
  */
-public class ApplicationException extends RuntimeException {
+public class SysException extends RuntimeException {
 
     public IErrorEnum errorEnum;
 
     public Object[] fillParameter;
 
-    public ApplicationException(IErrorEnum errorEnum) {
+    public SysException(IErrorEnum errorEnum) {
         super(errorEnum.getErrorMessage());
         this.errorEnum = errorEnum;
     }
 
-    public ApplicationException(IErrorEnum errorEnum, Throwable t) {
+    public SysException(IErrorEnum errorEnum, Throwable t) {
         super(errorEnum.getErrorMessage(), t);
         this.errorEnum = errorEnum;
     }
 
-    public ApplicationException(IErrorEnum errorEnum, Object... fillParameter) {
+    public SysException(IErrorEnum errorEnum, Object... fillParameter) {
         super(errorEnum.getErrorMessage());
         this.errorEnum = errorEnum;
         this.fillParameter = fillParameter;
@@ -34,6 +33,7 @@ public class ApplicationException extends RuntimeException {
 
     @Override
     public String getMessage() {
+        // todo: multi-language message
         if (errorEnum != null) {
             if (fillParameter != null && fillParameter.length > 0) {
                 return String.format(errorEnum.getErrorMessage(), fillParameter);

@@ -1,13 +1,13 @@
 package com.lunch.common.enums;
 
 /**
- * ApplicationErrorEnum
+ * SysErrorEnum
  *
  * @author torrisli
  * @date 2022/2/13
- * @Description: ApplicationErrorEnum
+ * @Description: SysErrorEnum
  */
-public enum ApplicationErrorEnum implements IErrorEnum {
+public enum SysErrorEnum implements IErrorEnum {
 
     UNKNOWN_EXCEPTION("InternalError", "未知错误, %s", "Unknown exception occurred, %s."),
     FAILED_OPERATION("FailedOperation.OperationFailure", "操作失败", "Operation failed."),
@@ -19,7 +19,7 @@ public enum ApplicationErrorEnum implements IErrorEnum {
 
     private String errorMessageEn;
 
-    ApplicationErrorEnum(String errorCode, String errorMessage, String errorMessageEn) {
+    SysErrorEnum(String errorCode, String errorMessage, String errorMessageEn) {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
         this.errorMessageEn = errorMessageEn;
