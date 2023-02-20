@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 /**
  * BaseModel
@@ -18,9 +19,11 @@ public class BaseModel {
     @Id
     private String id;
 
+    @Indexed
     @CreatedDate
     private Date createdDate;
 
+    @Indexed
     @LastModifiedDate
     private Date lastModifiedDate;
 

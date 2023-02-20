@@ -58,7 +58,7 @@ public class ExecutorService {
     public Map execute(String action, String requestId, Map input) {
 
         long beginTime = System.currentTimeMillis();
-        Map result = Maps.newHashMap();
+        Map result = null;
 
         try {
             // 检查参数
@@ -102,7 +102,8 @@ public class ExecutorService {
 
             // 处理输出参数
             Map outMap = JSONObject.parseObject(JSON.toJSONString(outputObj, SerializerFeature.WriteMapNullValue));
-            outMap.put(ExecutorConstants.REQUEST_ID, requestId);
+            result = Maps.newHashMap();
+            result.put(ExecutorConstants.REQUEST_ID, requestId);
             result.put(ExecutorConstants.RESPONSE, outMap);
 
             // 日志跟踪
@@ -159,11 +160,9 @@ public class ExecutorService {
             errorMap.put(ExecutorConstants.MESSAGE, errorMessage);
         }
 
-        Map outputMap = Maps.newHashMap();
-        outputMap.put(ExecutorConstants.ERROR, errorMap);
-        outputMap.put(ExecutorConstants.REQUEST_ID, requestId);
         Map result = Maps.newHashMap();
-        result.put(ExecutorConstants.RESPONSE, outputMap);
+        result.put(ExecutorConstants.REQUEST_ID, requestId);
+        result.put(ExecutorConstants.ERROR, errorMap);
         return result;
     }
 
