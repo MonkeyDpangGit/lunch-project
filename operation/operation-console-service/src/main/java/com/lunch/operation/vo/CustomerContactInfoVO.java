@@ -1,27 +1,20 @@
-package com.lunch.operation.dto;
-
-import com.lunch.common.enums.Gender;
-import javax.validation.constraints.NotBlank;
+package com.lunch.operation.vo;
 
 /**
- * CustomerContactInfoDTO
+ * CustomerContactInfoVO
  *
  * @author torrisli
- * @date 2023/2/20
- * @Description: CustomerContactInfoDTO
+ * @date 2023/2/21
+ * @Description: CustomerContactInfoVO
  */
-public class CustomerContactInfoDTO {
+public class CustomerContactInfoVO {
 
-    @NotBlank(message = "姓名")
     private String name;
 
-    @NotBlank(message = "性别")
     private String gender;
 
-    @NotBlank(message = "手机号码")
     private String phone;
 
-    @NotBlank(message = "电话区号")
     private String phoneAreaCode;
 
     private String email;
@@ -44,20 +37,20 @@ public class CustomerContactInfoDTO {
         this.gender = gender;
     }
 
-    public String getPhoneAreaCode() {
-        return phoneAreaCode;
-    }
-
-    public void setPhoneAreaCode(String phoneAreaCode) {
-        this.phoneAreaCode = phoneAreaCode;
-    }
-
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getPhoneAreaCode() {
+        return phoneAreaCode;
+    }
+
+    public void setPhoneAreaCode(String phoneAreaCode) {
+        this.phoneAreaCode = phoneAreaCode;
     }
 
     public String getEmail() {

@@ -5,55 +5,66 @@ import com.lunch.common.enums.Gender;
 import com.lunch.common.enums.SysErrorEnum;
 import com.lunch.common.exception.SysException;
 import com.lunch.common.executor.IExecutor;
-import com.lunch.operation.dto.CreateCustomerDTO;
+import com.lunch.common.vo.EmptyVO;
 import com.lunch.operation.dto.CustomerContactInfoDTO;
+import com.lunch.operation.dto.UpdateCustomerDTO;
 import com.lunch.operation.enums.CustomerType;
 import com.lunch.operation.enums.OperationErrorEnum;
 import com.lunch.operation.model.Customer;
 import com.lunch.operation.model.CustomerContactInfo;
 import com.lunch.operation.service.CustomerService;
-import com.lunch.operation.vo.CreateCustomerVO;
 import java.util.List;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * CreateCustomerExecutor
+ * UpdateCustomerExecutor
  *
  * @author torrisli
- * @date 2023/2/20
- * @Description: CreateCustomerExecutor
+ * @date 2023/2/21
+ * @Description: UpdateCustomerExecutor
  */
-@Component("CreateCustomer")
-public class CreateCustomerExecutor implements IExecutor<CreateCustomerDTO, CreateCustomerVO> {
+@Component("UpdateCustomer")
+public class UpdateCustomerExecutor implements IExecutor<UpdateCustomerDTO, EmptyVO> {
 
     @Autowired
     private CustomerService customerService;
 
     @Override
-    public CreateCustomerVO execute(CreateCustomerDTO createCustomerDTO) throws Exception {
+    public EmptyVO execute(UpdateCustomerDTO updateCustomerDTO) throws Exception {
 
-        // generate customerId
-        String customerId = customerService.generateCustomerId();
-
-        Customer customer = new Customer();
-        customer.setCustomerId(customerId);
-        customer.setCustomerName(createCustomerDTO.getCustomerName());
-        customer.setRemark(createCustomerDTO.getRemark());
-
-        // handle customerType
-        String customerType = createCustomerDTO.getCustomerType().toUpperCase();
-        try {
-            CustomerType.valueOf(customerType);
-        } catch (IllegalArgumentException e) {
-            throw new SysException(OperationErrorEnum.ILLEGAL_CUSTOMER_TYPE);
+        // get customer by customerId
+        Customer customer = customerService.getCustomerByCustomerId(updateCustomerDTO.getCustomerId());
+        if (customer == null) {
+            throw new SysException(OperationErrorEnum.NOT_EXISTS_CUSTOMER);
         }
-        customer.setType(customerType);
-
-        // handle customerContactInfos
-        List<CustomerContactInfoDTO> customerContactInfoDTOList = createCustomerDTO.getCustomerContactInfos();
-        if (CollectionUtils.isNotEmpty(customerContactInfoDTOList)) {
+        // customerName
+        String customerName = updateCustomerDTO.getCustomerName();
+        if (customerName != null) {
+            if (StringUtils.isBlank(customerName)) {
+                throw new SysException(OperationErrorEnum.BLANK_CUSTOMER_NAME);
+            }
+            customer.setCustomerName(customerName);
+        }
+        // customerType
+        String customerType = updateCustomerDTO.getCustomerType();
+        if (customerType != null) {
+            try {
+                CustomerType.valueOf(customerType);
+            } catch (IllegalArgumentException e) {
+                throw new SysException(OperationErrorEnum.ILLEGAL_CUSTOMER_TYPE);
+            }
+            customer.setType(customerType);
+        }
+        // remark
+        String remark = updateCustomerDTO.getRemark();
+        if (remark != null) {
+            customer.setRemark(remark);
+        }
+        // customerContactInfos
+        List<CustomerContactInfoDTO> customerContactInfoDTOList = updateCustomerDTO.getCustomerContactInfos();
+        if (customerContactInfoDTOList != null) {
             List<CustomerContactInfo> customerContactInfos = Lists.newArrayList();
 
             for (CustomerContactInfoDTO contactDTO : customerContactInfoDTOList) {
@@ -76,10 +87,9 @@ public class CreateCustomerExecutor implements IExecutor<CreateCustomerDTO, Crea
             customer.setCustomerContactInfos(customerContactInfos);
         }
 
+        // save
         customerService.saveCustomer(customer);
 
-        CreateCustomerVO vo = new CreateCustomerVO();
-        vo.setCustomerId(customerId);
-        return vo;
+        return new EmptyVO();
     }
 }

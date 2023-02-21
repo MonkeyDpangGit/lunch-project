@@ -1,9 +1,7 @@
 package com.lunch.operation.service;
 
-import com.lunch.common.model.DemoEntity;
 import com.lunch.operation.model.Customer;
 import com.lunch.operation.repository.CustomerRepository;
-import java.util.List;
 import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +46,17 @@ public class CustomerService {
     }
 
     /**
+     * 根据客户标识获取客户
+     *
+     * @param customerId 客户标识
+     * @return
+     */
+    public Customer getCustomerByCustomerId(String customerId) {
+
+        return customerRepository.findByCustomerId(customerId);
+    }
+
+    /**
      * 创建或更新客户
      *
      * @param customer 客户对象
@@ -68,7 +77,17 @@ public class CustomerService {
     }
 
     /**
-     * 生成客户id
+     * 根据数据id删除客户
+     *
+     * @param id 数据id
+     */
+    public void deleteCustomerById(String id) {
+
+        customerRepository.deleteById(id);
+    }
+
+    /**
+     * 生成客户标识
      *
      * @return
      */

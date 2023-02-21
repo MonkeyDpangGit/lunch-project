@@ -11,7 +11,9 @@ import com.lunch.common.enums.IErrorEnum;
  */
 public enum OperationErrorEnum implements IErrorEnum {
 
-    ILLEGAL_CUSTOMER_TYPE("InvalidParameter.GenderIllegal", "'客户类型'参数不合法", "'CustomerType' parameter is illegal.");
+    ILLEGAL_CUSTOMER_TYPE("InvalidParameter.CustomerTypeIllegal", "'客户类型'参数不合法", "'CustomerType' parameter is illegal."),
+    NOT_EXISTS_CUSTOMER("FailedOperation.CustomerNotExists", "客户不存在", "Customer dose not exist."),
+    BLANK_CUSTOMER_NAME("InvalidParameter.CustomerNameBlank", "客户名称不能为空", "'CustomerName' can not be blank.");
 
     private String errorCode;
 
