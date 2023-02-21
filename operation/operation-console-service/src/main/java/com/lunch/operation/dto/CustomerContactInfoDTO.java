@@ -1,23 +1,28 @@
-package com.lunch.operation.model;
+package com.lunch.operation.dto;
 
 import com.lunch.common.enums.Gender;
+import javax.validation.constraints.NotBlank;
 
 /**
- * CustomerContactInfo
+ * CustomerContactInfoDTO
  *
  * @author torrisli
- * @date 2023/2/19
- * @Description: CustomerContactInfo
+ * @date 2023/2/20
+ * @Description: CustomerContactInfoDTO
  */
-public class CustomerContactInfo {
+public class CustomerContactInfoDTO {
 
+    @NotBlank(message = "姓名")
     private String name;
 
+    @NotBlank(message = "性别")
     private String gender;
 
-    private String phoneAreaCode;
-
+    @NotBlank(message = "手机号码")
     private String phone;
+
+    @NotBlank(message = "电话地区号")
+    private String phoneAreaCode;
 
     private String email;
 

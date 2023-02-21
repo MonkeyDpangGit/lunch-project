@@ -4,6 +4,8 @@ import com.lunch.common.model.DemoEntity;
 import com.lunch.operation.model.Customer;
 import com.lunch.operation.repository.CustomerRepository;
 import java.util.List;
+import java.util.UUID;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class CustomerService {
+
+    public final static String CUSTOMER_ID_PREFIX = "customer-";
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -41,6 +45,35 @@ public class CustomerService {
             customerList = customerRepository.findAll(pageable);
         }
         return customerList;
+    }
+
+    /**
+     * 创建或更新客户
+     *
+     * @param customer 客户对象
+     */
+    public void saveCustomer(Customer customer) {
+
+        String customerId = customer.getCustomerId();
+        if (StringUtils.isNotBlank(customerId)) {
+            customer.setCustomerId(generateCustomerId());
+        }
+        String id = customer.getId();
+        if (StringUtils.isBlank(id)) {
+            customer.setId(UUID.randomUUID().toString());
+            customerRepository.insert(customer);
+        } else {
+            customerRepository.save(customer);
+        }
+    }
+
+    /**
+     * 生成客户id
+     *
+     * @return
+     */
+    public String generateCustomerId() {
+        return CUSTOMER_ID_PREFIX + RandomStringUtils.random(8);
     }
 
 }

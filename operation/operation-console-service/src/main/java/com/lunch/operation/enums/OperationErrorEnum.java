@@ -10,7 +10,8 @@ import com.lunch.common.enums.IErrorEnum;
  * @Description: OperationErrorEnum
  */
 public enum OperationErrorEnum implements IErrorEnum {
-    ;
+
+    ILLEGAL_CUSTOMER_TYPE("InvalidParameter.GenderIllegal", "'客户类型'参数不合法", "'CustomerType' parameter is illegal.");
 
     private String errorCode;
 

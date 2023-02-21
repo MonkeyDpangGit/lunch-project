@@ -11,7 +11,8 @@ public enum SysErrorEnum implements IErrorEnum {
 
     UNKNOWN_EXCEPTION("InternalError", "未知错误, %s", "Unknown exception occurred, %s."),
     FAILED_OPERATION("FailedOperation.OperationFailure", "操作失败", "Operation failed."),
-    ILLEGAL_PARAMETER("InvalidParameter.ParameterIllegal", "参数不合法, %s", "Parameter is illegal, %s.");
+    ILLEGAL_PARAMETER("InvalidParameter.ParameterIllegal", "参数不合法, %s", "Parameter is illegal, %s."),
+    ILLEGAL_GENDER("InvalidParameter.GenderIllegal", "'性别'参数不合法", "'Gender' parameter is illegal.");
 
     private String errorCode;
 

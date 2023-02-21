@@ -16,6 +16,9 @@ import java.util.Set;
 import java.util.UUID;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,7 +180,17 @@ public class ExecutorService {
         if (violations.size() > 0) {
             String message = "";
             for (ConstraintViolation<T> violation : violations) {
-                message = violation.getMessage();
+                // todo multi-language
+                String propertyName = violation.getPropertyPath().toString();
+                propertyName = violation.getMessage();
+
+                // todo multi-annotation
+                Class anotationType = violation.getConstraintDescriptor().getAnnotation().annotationType();
+                if (anotationType == NotBlank.class || anotationType == NotEmpty.class
+                        || anotationType == NotNull.class) {
+                    message = "'" + propertyName + "'不能为空";
+                }
+
                 break;
             }
             throw new IllegalArgumentException(message);
