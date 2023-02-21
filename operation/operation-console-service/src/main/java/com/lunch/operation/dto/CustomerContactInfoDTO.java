@@ -1,6 +1,7 @@
 package com.lunch.operation.dto;
 
 import com.lunch.common.enums.Gender;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -24,6 +25,7 @@ public class CustomerContactInfoDTO {
     @NotBlank(message = "电话区号")
     private String phoneAreaCode;
 
+    @Email(message = "邮箱地址")
     private String email;
 
     private String address;

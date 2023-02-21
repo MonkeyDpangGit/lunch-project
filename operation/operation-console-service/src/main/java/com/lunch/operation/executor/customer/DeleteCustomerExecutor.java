@@ -1,4 +1,4 @@
-package com.lunch.operation.executor;
+package com.lunch.operation.executor.customer;
 
 import com.lunch.common.exception.SysException;
 import com.lunch.common.executor.IExecutor;
