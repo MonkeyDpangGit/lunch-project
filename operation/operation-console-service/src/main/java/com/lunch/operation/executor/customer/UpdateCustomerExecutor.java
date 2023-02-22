@@ -2,6 +2,7 @@ package com.lunch.operation.executor.customer;
 
 import com.google.common.collect.Lists;
 import com.lunch.common.enums.Gender;
+import com.lunch.common.enums.PhoneAreaCode;
 import com.lunch.common.enums.SysErrorEnum;
 import com.lunch.common.exception.SysException;
 import com.lunch.common.executor.IExecutor;
@@ -68,18 +69,24 @@ public class UpdateCustomerExecutor implements IExecutor<UpdateCustomerDTO, Empt
             List<CustomerContactInfo> customerContactInfos = Lists.newArrayList();
 
             for (CustomerContactInfoDTO contactDTO : customerContactInfoDTOList) {
+                // check gender
                 String gender = contactDTO.getGender().toUpperCase();
                 try {
                     Gender.valueOf(gender);
                 } catch (IllegalArgumentException e) {
                     throw new SysException(SysErrorEnum.ILLEGAL_GENDER);
                 }
+                // check phoneAreaCode
+                String phoneAreaCode = contactDTO.getPhoneAreaCode();
+                PhoneAreaCode areaCodeEnum = PhoneAreaCode.getByCode(phoneAreaCode);
+                if (areaCodeEnum == null) {
+                    throw new SysException(SysErrorEnum.UNSUPPORTED_PHONE_AREA_CODE);
+                }
                 CustomerContactInfo contact = new CustomerContactInfo();
                 contact.setGender(gender);
-
                 contact.setName(contactDTO.getName());
                 contact.setPhone(contactDTO.getPhone());
-                contact.setPhoneAreaCode(contactDTO.getPhoneAreaCode());
+                contact.setPhoneAreaCode(phoneAreaCode);
                 contact.setEmail(contactDTO.getEmail());
                 contact.setAddress(contactDTO.getAddress());
                 customerContactInfos.add(contact);
