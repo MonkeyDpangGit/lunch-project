@@ -10,7 +10,11 @@ import com.lunch.common.enums.IErrorEnum;
 import com.lunch.common.enums.SysErrorEnum;
 import com.lunch.common.exception.SysException;
 import com.lunch.common.executor.IExecutor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -19,6 +23,7 @@ import javax.validation.Validator;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +103,7 @@ public class ExecutorService {
             Object inputObj = JSONObject.parseObject(JSON.toJSONString(input), paramType);
 
             // 检查输入参数
-            checkParam(inputObj);
+            checkParameter(inputObj);
 
             // 执行处理逻辑
             Object outputObj = executor.execute(inputObj);
@@ -175,7 +180,9 @@ public class ExecutorService {
      * @param t 范型参数
      * @param <T>
      */
-    private <T> void checkParam(T t) {
+    private <T> void checkParameter(T t) {
+
+        // validate simple type
         Set<ConstraintViolation<T>> violations = validator.validate(t);
         if (violations.size() > 0) {
             String message = "";
@@ -195,6 +202,7 @@ public class ExecutorService {
             }
             throw new IllegalArgumentException(message);
         }
+        // validate PageDTO type
         if (t instanceof PageDTO) {
             PageDTO pageDTO = (PageDTO) t;
             Integer offset = pageDTO.getOffset();
@@ -207,6 +215,33 @@ public class ExecutorService {
                 }
                 if (limit <= 0) {
                     throw new IllegalArgumentException("'Limit' should be greater then zero");
+                }
+            }
+        }
+        // nest validate List type
+        for (Field field : t.getClass().getDeclaredFields()) {
+            if (field.getType() != List.class) {
+                continue;
+            }
+            Type genericType = field.getGenericType();
+            if (genericType == null || !(genericType instanceof ParameterizedType)) {
+                continue;
+            }
+            ParameterizedType pt = (ParameterizedType) genericType;
+            Class<?> genericClazz = (Class<?>) pt.getActualTypeArguments()[0];
+            if (genericClazz.isPrimitive() || genericClazz == String.class) {
+                continue;
+            }
+            field.setAccessible(true);
+            List listAttrValue = null;
+            try {
+                listAttrValue = (List) field.get(t);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (CollectionUtils.isNotEmpty(listAttrValue)) {
+                for (Object element : listAttrValue) {
+                    checkParameter(element);
                 }
             }
         }

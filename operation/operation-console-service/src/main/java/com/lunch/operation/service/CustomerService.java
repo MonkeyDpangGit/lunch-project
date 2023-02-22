@@ -64,7 +64,7 @@ public class CustomerService {
     public void saveCustomer(Customer customer) {
 
         String customerId = customer.getCustomerId();
-        if (StringUtils.isNotBlank(customerId)) {
+        if (StringUtils.isBlank(customerId)) {
             customer.setCustomerId(generateCustomerId());
         }
         String id = customer.getId();
@@ -92,7 +92,7 @@ public class CustomerService {
      * @return
      */
     public String generateCustomerId() {
-        return CUSTOMER_ID_PREFIX + RandomStringUtils.random(8);
+        return CUSTOMER_ID_PREFIX + RandomStringUtils.random(8, true, true).toLowerCase();
     }
 
 }
